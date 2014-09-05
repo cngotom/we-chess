@@ -1,0 +1,107 @@
+<!DOCTYPE HTML
+<html>
+<meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=0.55, minimum-scale=0.55, maximum-scale=1.0, user-scalable=no"/>
+<meta charset="UTF-8">
+<title>中国象棋 in html5</title>
+<script type="text/javascript" src="./config.js"></script>
+<script type="text/javascript" src="../common/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../common/common.js"></script>
+<script type="text/javascript" src="./js/socket.io-1.0.6.js"></script>
+<link href="css/chess.css" rel="stylesheet" type="text/css">
+<!--[if lt IE 9]>
+<script> alert("对不起，您的浏览器不支持HTML5，请升级浏览器至IE9、firefox或者谷歌浏览器！")</script>
+<![endif]-->
+</head>
+<body onload="init()">
+<div id="share" style="display: none">
+			<img width="100%" src="../res/share.png" style="position: fixed; z-index: 9999; top: 0; left: 0; display: " ontouchstart="document.getElementById('share').style.display='none'">
+		</div>
+<div id="chessBox" class="chess_box">
+	<canvas id="chess"></canvas>
+	<div style="display:none">
+		<audio src="audio/click.wav" id="clickAudio" preload="auto"></audio>
+		<audio src="audio/select.wav" id="selectAudio" preload="auto"></audio>
+	</div>
+	<div class="bn_box" id="bnBox" >
+		<input type="button" name="restartBtn" id="restartBtn" value="重新开始" />
+		<input type="button" name="gohomeBtn" id="gohomeBtn" value="返回首页" />
+		<input type="button" name="regretBtn" id="regretBtn" value="  悔   棋  " />
+	</div>
+
+	<div class="info_box" id="info_box">
+		<p class="player_info" id="player_info" > </p>
+		<ul id="info_list">
+
+		</ul>
+
+	</div>
+
+</div>
+<div class="menu_box" id="menuBox">
+	<div class="menu_init" id="indexBox"><a id="indexDy">人机对弈</a><a id="indexQj">挑战棋局</a><!--<a id="stypeBtn">更换皮肤</a>--> <a id="netbatBtn">网络对战</a></div>
+	<div class="menu_dy" id="menuDy">
+		<div class="menu_info">
+			<div class="menu_fh" id="menuFh"></div>
+			<label>
+				<input name="depth" type="radio" value="2">
+				菜鸟水平</label>
+			<br />
+			<label>
+				<input name="depth" type="radio" value="3" checked>
+				中级水平</label>
+			<br />
+			<label>
+				<input name="depth" type="radio" value="4">
+				高手水平</label>
+		</div>
+		<a id="playBtn">开始对弈</a> </div>
+	<div class="menu_qj" id="menuQj">
+		<div class="menu_info">
+			<div class="menu_fh" id="menuGb"></div>
+			<label>
+				<input name="clasli" type="radio" value="0" checked>
+				八卦阵法</label>
+			<br />
+			<label>
+				<input name="clasli" type="radio" value="1">
+				很二棋局</label>
+			<br />
+			<label>
+				<input name="clasli" type="radio" value="2">
+				七星会阵</label>
+		</div>
+		<a id = "clasliBtn">开始挑战</a> </div>
+</div>
+<script type="text/javascript" src="js/common.js"></script> 
+<script type="text/javascript" src="js/play.js"></script> 
+<script type="text/javascript" src="js/AI.js"></script> 
+<script type="text/javascript" src="js/gambit.js"></script> 
+<script type="text/javascript" src="js/clasli.js"></script>
+<script type="text/javascript" src="js/net.js"></script>
+<script type="text/javascript" src="js/netplay.js"></script>
+<script>
+$(window).load(function(){
+//localStorage['user_name'] ="";
+	var search_str = window.location.search;
+	if(search_str != "")
+	{
+		console.log(search_str);
+		com.get("chessBox").style.display = "block";
+		com.get("menuBox").style.display = "none";
+		com.get("bnBox").style.display = "none";
+		var room = search_str.substr(1,search_str.length-1);
+		socket.emit("CJoinRoom",{room:parseInt(room),name:GUserName()});
+	
+		GameConfig.shareData.title = "我已经摆好了棋局，敢不敢来挑战!";	
+		GameConfig.shareData.link = window.location.href;
+		
+		window.onShareComplete = function(){
+			window.location = window.location.href;
+		}
+	}
+});
+
+</script>
+</body>
+</html>
+
